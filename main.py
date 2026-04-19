@@ -173,8 +173,8 @@ def run_one_slot(
     mechanism = CDA_mechanism(
         order_book=order_book,
         trader_registry=trader_registry,
-        max_trade_rounds=150,
-        max_no_trade_rounds=50,
+        max_trade_rounds=50,
+        max_no_trade_rounds=20,
         verbose=verbose,
     )
 
