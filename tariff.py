@@ -154,7 +154,7 @@ class TariffLoader:
 
 
 def load_tou_profile(
-    csv_path="csv_agile_L_South_Western_England.csv",
+    csv_path="ToU_London.csv",
     target_year=2026,
     season=None,
     agg="median",
@@ -170,7 +170,7 @@ def load_tou_profile(
 
 
 def load_fit_profile(
-    csv_path="csv_agileoutgoing_L_South_Western_England.csv",
+    csv_path="FiT_London.csv",
     target_year=2026,
     season=None,
     agg="median",
