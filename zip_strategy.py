@@ -5,7 +5,7 @@ import random
 beta_range = (0.1, 0.5)
 gamma_range = (0.0, 0.1)
 margin_range = (0.05, 0.35)
-c_range = (0.0, 0.05)
+c_range = (0.0, 0.03)
 
 
 @dataclass
@@ -38,8 +38,8 @@ def determine_zip_action(side, p_i, q, accepted, last_shout_type):
                 return "lower"
             return "none"
         else:
-            # no trade: sellers should move toward the best bid
-            if last_shout_type == "bid" and p_i >= q:
+            # no trade: sellers should move toward the best ask
+            if last_shout_type == "ask" and p_i >= q:
                 return "lower"
             return "none"
 
@@ -51,8 +51,8 @@ def determine_zip_action(side, p_i, q, accepted, last_shout_type):
                 return "lower"
             return "none"
         else:
-            # no trade: buyers should move toward the best ask
-            if last_shout_type == "ask" and p_i <= q:
+            # no trade: buyers should move toward the best bid
+            if last_shout_type == "bid" and p_i <= q:
                 return "raise"
             return "none"
 
@@ -117,16 +117,23 @@ class ZIPStrategy:
 
         if action == "none":
             return current_price
-        elif action == "raise":
-            base = max(current_price, q)
-            tau = base * (1.0 + self.c)
-            return limited_price(tau, self.fit_price, self.tou_price)
-        elif action == "lower":
-            base = min(current_price, q)
-            tau = base * (1.0 - self.c)
-            return limited_price(tau, self.fit_price, self.tou_price)
-        else:
-            raise ValueError(f"Unknown action: {action}")
+
+        if self.side == "sell":
+            if action == "raise":
+                base = max(current_price, q)
+                tau = base * (1.0 + self.c)
+            else: 
+                base = min(current_price, q)
+                tau = base * (1.0 - self.c)
+        else:  # buy
+            if action == "raise":
+                base = min(current_price, q)
+                tau = base * (1.0 - self.c)
+            else:  
+                base = max(current_price, q)
+                tau = base * (1.0 + self.c)
+
+        return limited_price(tau, self.fit_price, self.tou_price)
 
     def generate_shout(self, fit_price, tou_price):
         if fit_price <= 0:
