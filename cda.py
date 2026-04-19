@@ -23,8 +23,8 @@ class CDA_mechanism:
         self,
         order_book,
         trader_registry,
-        max_trade_rounds=150,
-        max_no_trade_rounds=50,
+        max_trade_rounds=50,
+        max_no_trade_rounds=20,
         verbose=True,
     ):
         self.order_book = order_book
@@ -192,7 +192,7 @@ class CDA_mechanism:
                 MarketSignal(
                     reference_price=trade_price,
                     accepted=True,
-                    last_shout_type="ask"
+                    last_shout_type="bid"
                 )
             )
 
@@ -224,7 +224,7 @@ class CDA_mechanism:
                 MarketSignal(
                     reference_price=trade_price,
                     accepted=True,
-                    last_shout_type="bid"
+                    last_shout_type="ask"
                 )
             )
 
@@ -263,12 +263,12 @@ class CDA_mechanism:
 
             old_price = bid_order.submitted_price
 
-            # Buyer should react to the best ask in a no-trade round
+            # Buyer should react to the best bid in a no-trade round
             strategy.update_from_market_signal(
                 MarketSignal(
-                    reference_price=reference_ask_price,
+                    reference_price=reference_bid_price,
                     accepted=False,
-                    last_shout_type="ask"
+                    last_shout_type="bid"
                 )
             )
 
@@ -299,12 +299,12 @@ class CDA_mechanism:
 
             old_price = ask_order.submitted_price
 
-            # Seller should react to the best bid in a no-trade round
+            # Seller should react to the best ask in a no-trade round
             strategy.update_from_market_signal(
                 MarketSignal(
-                    reference_price=reference_bid_price,
+                    reference_price=reference_ask_price,
                     accepted=False,
-                    last_shout_type="bid"
+                    last_shout_type="ask"
                 )
             )
 
