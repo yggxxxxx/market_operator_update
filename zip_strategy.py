@@ -53,7 +53,7 @@ def determine_zip_action(side, p_i, q, accepted, last_shout_type):
         else:
             # no trade: buyers should move toward the best bid
             if last_shout_type == "bid" and p_i <= q:
-                return "raise"
+                return "lower"
             return "none"
 
 class ZIPStrategy:
